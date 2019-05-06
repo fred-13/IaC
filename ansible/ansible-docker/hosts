@@ -1,0 +1,7 @@
+[docker-node]
+test-ansible-1 ansible_user=extra
+test-ansible-2 ansible_user=extra
+
+#[docker]
+#app1-test001-docker ansible_user=extra
+#app2-test001-docker ansible_user=extra

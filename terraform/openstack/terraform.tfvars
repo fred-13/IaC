@@ -1,0 +1,6 @@
+user_infra = "ameshcheryakov@plazius.ru"
+url_infra = "https://infra.mail.ru:35357/v3/"
+pass_infra = "******************************"
+domain_id_infra = "default"
+tenant_id_infra = "6450ef99637a4c88a5a83a45084d3b19"
+instance_name = "New-App"

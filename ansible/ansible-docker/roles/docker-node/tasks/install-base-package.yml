@@ -1,0 +1,56 @@
+- name: "APT - Add custom repository"
+  apt_repository:
+    repo: '{{ item }}'
+    state: present
+    update_cache: yes
+  with_items:
+    - "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} main restricted"
+    - "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }}-updates main restricted"
+    - "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} universe"
+    - "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }}-updates universe"
+    - "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} multiverse"
+    - "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }}-updates multiverse"
+    - "deb http://us.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }}-backports main restricted universe multiverse"
+    - "deb http://security.ubuntu.com/ubuntu {{ ansible_distribution_release }}-security main restricted"
+    - "deb http://security.ubuntu.com/ubuntu {{ ansible_distribution_release }}-security multiverse"
+
+- name: Install a base list of packages
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+  vars:
+    packages:
+    - htop
+    - vim
+    - smartmontools
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+    - python-pip
+
+- name: install certain python modules for docker
+  pip:
+    name: ['docker']
+    # name: ['docker', 'docker-py']
+    # name: "{{ item.name }}"
+    # version: "{{ item.version }}"
+    state: present
+  # with_items:
+      #- docker
+    # - docker-py
+      # - { name: docker, version: 2.0.0 }
+      # - { name: docker-py, version: 1.10.6 }
+- name: set timezone to Europe/Moscow
+  timezone:
+    name: Europe/Moscow
+
+- name: insert/update /etc/systemd/timesyncd.conf
+  blockinfile:
+    path: /etc/systemd/timesyncd.conf
+    block: |
+        NTP=ntp2.stratum2.ru
+        NTP=ntp1.stratum1.ru
+  notify:
+    - restart systemd-timesyncd

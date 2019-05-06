@@ -1,0 +1,52 @@
+- name: "APT - Add Docker GPG key"
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: "APT - Add Docker repository"
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+    filename: docker
+
+- name: Install docker packages
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+  vars:
+    packages:
+    - docker-ce={{docker_ce_version}}~3-0~{{ ansible_distribution }}-{{ ansible_distribution_release }}
+    - docker-ce-cli={{docker_ce_version}}~3-0~{{ ansible_distribution }}-{{ ansible_distribution_release }}
+    - containerd.io
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg-agent
+    - software-properties-common
+
+- name: Copy daemon.json
+  copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+  notify:
+    - restart docker daemond
+
+- name: Create directory /cert
+  file:
+    path: /cert
+    state: directory
+    mode: 0755
+
+- name: Copy ApplePayMerchantIdentityCertificate.p12
+  copy:
+    src: ApplePayMerchantIdentityCertificate.p12
+    dest: /cert/ApplePayMerchantIdentityCertificate.p12
+
+- name: Create docker volume certificates
+  docker_volume:
+     name: certificates
+     driver: local
+     driver_options:
+        type: none
+        device: /cert
+        o: bind

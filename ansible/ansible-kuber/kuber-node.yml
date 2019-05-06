@@ -1,0 +1,24 @@
+---
+- name: Check && install python
+  hosts: all
+  become: true
+  gather_facts: False
+
+  tasks:
+    - name: Install python for Ansible
+      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+      changed_when: False
+
+
+- name: Configure kuber-node
+  hosts: kuber-node
+  become: true
+  gather_facts: true
+
+  roles:
+    # - base-install-python 
+    - kuber-node
+  vars:
+    docker_ce_version: "5:18.09.1"
+    kubernetes_version: "1.13.5-00"
+    # gather_facts: true

@@ -1,0 +1,11 @@
+---
+# handlers file for docker-node
+- name: restart docker daemond
+  service:
+    name: docker
+    state: restarted
+
+- name: restart systemd-timesyncd
+  service:
+    name: systemd-timesyncd
+    state: restarted

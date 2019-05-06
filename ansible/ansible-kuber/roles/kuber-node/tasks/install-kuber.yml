@@ -1,0 +1,29 @@
+- name: "APT - Add Kuber GPG key"
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    state: present
+
+- name: "APT - Add Kuber repository"
+  apt_repository:
+    repo: "deb https://apt.kubernetes.io/ kubernetes-xenial main"
+    state: present
+    filename: kubernetes
+
+- name: Install kuber packages
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+  vars:
+    packages:
+    - kubelet={{kubernetes_version}}
+    - kubeadm={{kubernetes_version}}
+    - kubectl={{kubernetes_version}}
+
+- name: hold kuber packages
+  dpkg_selections:
+    name: '{{ item }}'
+    selection: hold
+  with_items:
+    - kubelet
+    - kubeadm
+    - kubectl

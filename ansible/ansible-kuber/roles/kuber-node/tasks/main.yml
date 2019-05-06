@@ -1,0 +1,17 @@
+---
+# tasks file for docker-node
+
+- name: install base package
+  import_tasks: install-base-package.yml
+
+- name: swap off
+  import_tasks: swapoff.yaml
+
+- name: install docker-ce
+  import_tasks: install-docker.yml
+
+- name: install kuber
+  import_tasks: install-kuber.yml
+  
+- name: add users
+  import_tasks: addUsers.yml

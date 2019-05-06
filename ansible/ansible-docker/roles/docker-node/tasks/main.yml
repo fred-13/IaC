@@ -1,0 +1,11 @@
+---
+# tasks file for docker-node
+
+- name: install base package
+  import_tasks: install-base-package.yml
+
+- name: install docker-ce
+  import_tasks: install-docker.yml
+  
+- name: add users
+  import_tasks: addUsers.yml
