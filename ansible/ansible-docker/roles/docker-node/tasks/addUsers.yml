@@ -1,36 +1,4 @@
-- name: Add user extra
-  user: 
-    name: extra
-    shell: /bin/bash
-    groups: adm,sudo
-    password: $6$ZVLOSeMFKc5$CKbsp1oDGOnGi3mCob3P/dVovJQesGVzZoFiU6SHoc/73Ba/G9DdSdwfEcUed.EUjzYJ7zvhErGx6e0rli3V50
-
-- name: Add user ssergeev
-  user: 
-    name: ssergeev
-    shell: /bin/bash
-    groups: adm,sudo
-    password: $6$4Pqzwmy5y$SfsWUPohc7L2p46PYHbwejEz.RyiPV3UuxEBkMvdUdRgZLZLGErH2k27R/UVKJlFb.Vt4m.arkKWfz6DPe677.
-
-- name: Add user docker
-  user: 
-    name: docker
-    shell: /bin/bash
-    groups: docker
-    password: $6$tmVMUbtcb$tZDK.cprlBmt09CO/DIpC3gchG3wYDFNe0kWODClRD.l/HV584cJDNWs/VchnlHEhLtc3Qxs2NJsHYv52480n0
-    
-- name: Add authorized_key ssergeev
-  authorized_key:
-    user: ssergeev
-    state: present
-    key: "{{ lookup('file', 'authorized_key/ssergeev_id_rsa.pub') }}"
-
-- name: Add authorized_key docker
-  authorized_key:
-    user: docker
-    state: present
-    key: "{{ lookup('file', 'authorized_key/docker_id_rsa.pub') }}"
-
+---
 - name: Set up multiple authorized keys for extra
   authorized_key:
     user: extra
@@ -43,5 +11,5 @@
 - name: Copy sudoers.d
   copy:
     src: sudoers.d/extra
-    dest: /etc/sudoers.d/extra
+    dest: /etc/sudoers.d/ameshcheryakov
     mode: 0644
